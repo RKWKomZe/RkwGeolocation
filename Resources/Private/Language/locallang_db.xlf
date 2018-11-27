@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-08-27T14:40:22Z" product-name="rkw_geolocation">
+		<header/>
+		<body>
+			<trans-unit id="tx_rkwgeolocation_domain_model_geolocation">
+				<source>RKW Geolocation: Geolocation</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
