@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-4": {
-            "RKW\\Geolocation\\": "Classes/"
+            "RKW\\RkwGeolocation\\": "Classes/"
         }
     },
     "extra": {
