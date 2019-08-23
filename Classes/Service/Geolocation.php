@@ -366,23 +366,15 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
             && ($geoLocation instanceof \RKW\RkwGeolocation\Domain\Model\Geolocation)
         ) {
 
-            switch ($database) {
+        //  see https://tighten.co/blog/a-mysql-distance-function-you-should-know-about
+        switch ($database) {
                 default:
                     $query->statement('
                         SELECT *,
                         (
-                            6371.165 * acos(
-                                cos(
-                                    radians( ' . addslashes($geoLocation->getLatitude()) . ' )
-                                ) * cos(
-                                    radians( ' . $table . '.latitude )
-                                ) * cos(
-                                    radians( ' . $table . '.longitude ) - radians( ' . addslashes($geoLocation->getLongitude()) . ' )
-                                ) + sin(
-                                    radians( ' . addslashes($geoLocation->getLatitude()) . ' )
-                                ) * sin(
-                                    radians( ' . $table . '.latitude )
-                                )
+                            SELECT ST_Distance_Sphere(
+                                point(' . $geoLocation->getLongitude() . ', ' . $geoLocation->getLatitude() . '),
+                                point(' . $table . '.longitude, ' . $table . '.latitude)
                             )
                         ) AS distance
                         FROM ' . $table . '
@@ -399,49 +391,6 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
         }
     }
 
-
-    /**
-     * calculateDistance between two geo data
-     *
-     * @param float|int $lat1 Lat for point 1
-     * @param float|int $lng1 Lng for point 1
-     * @param float|int $lat2 Lat for point 2
-     * @param float|int $lng2 Lng for point 2
-     * @return float|int
-     * @deprecated since 2017-02-23
-     */
-    public function calculateDistance($lat1, $lng1, $lat2, $lng2)
-    {
-
-        $earthRadius = 6378.16;
-
-        $dlng = self::radians($lng2 - $lng1);
-        $dlat = self::radians($lat2 - $lat1);
-        $a = pow(sin($dlat / 2), 2) + cos(self::radians($lat1)) * cos(self::radians($lat2)) * pow(sin($dlng / 2), 2);
-        $angle = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        $result = $angle * $earthRadius;
-
-        return $result < 10 ? round($result, 1) : round($result);
-        //===
-    }
-
-
-    /**
-     * radians
-     *
-     * @param $x
-     * @return float|int
-     * @deprecated since 2017-02-23
-     */
-    protected function radians($x)
-    {
-
-        return $x * pi() / 180;
-        //===
-    }
-
-
     /**
      * Returns TYPO3 settings
      *
@@ -454,7 +403,6 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
         return Common::getTyposcriptConfiguration('RkwGeolocation', $which);
         //===
     }
-
 
     /**
      * Returns logger instance
