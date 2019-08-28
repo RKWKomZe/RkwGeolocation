@@ -358,7 +358,7 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
      * @throws \TYPO3\CMS\Core\Type\Exception\InvalidEnumerationValueException
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    public function getQueryStatementDistanceSearch($query, $table, $limit, $offset, $where, $orderBy = 'distance', $maxDistance = 5000, $database = 'mysql')
+    public function getQueryStatementDistanceSearch($query, $table, $limit, $offset, $where, $orderBy = 'distance', $maxDistance = 5, $database = 'mysql')
     {
 
         if (
@@ -375,7 +375,7 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
                             SELECT ST_Distance_Sphere(
                                 point(' . $geoLocation->getLongitude() . ', ' . $geoLocation->getLatitude() . '),
                                 point(' . $table . '.longitude, ' . $table . '.latitude)
-                            )
+                            ) * 0.001
                         ) AS distance
                         FROM ' . $table . '
                         WHERE ' . $table . '.longitude > 0 AND ' . $table . '.latitude > 0 ' .
