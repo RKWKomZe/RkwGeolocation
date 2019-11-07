@@ -1,18 +1,34 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
-}
+defined('TYPO3_MODE') || die('Access denied.');
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-	$_EXTKEY,
-	'Geolocation',
-	'Geolocation'
+call_user_func(
+    function($extKey)
+    {
+        //=================================================================
+        // Register Plugin
+        //=================================================================
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+            $extKey,
+            'Geolocation',
+            'Geolocation'
+        );
+
+        //=================================================================
+        // Add TypoScript
+        //=================================================================
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
+            $extKey,
+            'Configuration/TypoScript',
+            'RKW Geolocation'
+        );
+
+        //=================================================================
+        // Add tables
+        //=================================================================
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
+            'tx_rkwgeolocation_domain_model_geolocation'
+        );
+
+    },
+    $_EXTKEY
 );
-
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'RKW Geolocation');
-
-//=================================================================
-// Add tables
-//=================================================================
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_rkwgeolocation_domain_model_geolocation', 'EXT:rkw_geolocation/Resources/Private/Language/locallang_csh_tx_rkwgeolocation_domain_model_geolocation.xlf');
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_rkwgeolocation_domain_model_geolocation');
