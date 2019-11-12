@@ -1,36 +1,6 @@
 
-plugin.tx_rkwgeolocation {
-	view {
-		# cat=plugin.tx_rkwgeolocation/file; type=string; label=Path to template root (FE)
-		templateRootPath = EXT:rkw_geolocation/Resources/Private/Templates/
-		# cat=plugin.tx_rkwgeolocation/file; type=string; label=Path to template partials (FE)
-		partialRootPath = EXT:rkw_geolocation/Resources/Private/Partials/
-		# cat=plugin.tx_rkwgeolocation/file; type=string; label=Path to template layouts (FE)
-		layoutRootPath = EXT:rkw_geolocation/Resources/Private/Layouts/
-	}
-	persistence {
-		# cat=plugin.tx_rkwgeolocation//a; type=string; label=Default storage PID
-		storagePid =
-	}
+# !!! DEPRECATED – only for compatibility reasons !!!
+# We're moving from ".ts" and ".txt" to ".typoscript".
+# @see: https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/8.7.x/Feature-78161-IntroduceTypoScriptFileExtension.html
 
-    settings {
-
-        # cat=plugin.tx_rkwgeolocation//a; type=string; label=Google API URL
-        googleApiUrl = https://maps.google.com/maps/api/geocode/json
-
-        # cat=plugin.tx_rkwgeolocation//a; type=string; label=Google API Key
-        googleApiKey =
-
-        # cat=plugin.tx_rkwgeolocation//a; type=string; label=Google API Key for JS
-        googleApiKeyJs =
-
-        # cat=plugin.tx_rkwgeolocation//a; type=string; label=Proxy
-        proxy =
-
-        # cat=plugin.tx_rkwgeolocation//a; type=string; label=Username for proxy
-        proxyUsername =
-
-        # cat=plugin.tx_rkwgeolocation//a; type=string; label=Password for proxy
-        proxyPassword =
-    }
-}
+<INCLUDE_TYPOSCRIPT: source="FILE:./constants.typoscript">

@@ -1,0 +1,64 @@
+
+plugin.tx_rkwgeolocation {
+	view {
+		templateRootPath = {$plugin.tx_rkwgeolocation.view.templateRootPath}
+		partialRootPath = {$plugin.tx_rkwgeolocation.view.partialRootPath}
+		layoutRootPath = {$plugin.tx_rkwgeolocation.view.layoutRootPath}
+	}
+	persistence {
+		storagePid = {$plugin.tx_rkwgeolocation.persistence.storagePid}
+	}
+	features {
+		# uncomment the following line to enable the new Property Mapper.
+		# rewrittenPropertyMapper = 1
+	}
+
+
+	settings {
+
+    	googleApiUrl = {$plugin.tx_rkwgeolocation.settings.googleApiUrl}
+    	googleApiKey = {$plugin.tx_rkwgeolocation.settings.googleApiKey}
+		googleApiKeyJs = {$plugin.tx_rkwgeolocation.settings.googleApiKeyJs}
+
+		proxy = {$plugin.tx_rkwgeolocation.settings.proxy}
+		proxyUsername = {$plugin.tx_rkwgeolocation.settings.proxyUsername}
+		proxyPassword = {$plugin.tx_rkwgeolocation.settings.proxyPassword}
+    }
+}
+
+module.tx_rkwgeolocation.settings < plugin.tx_rkwgeolocation.settings
+
+
+plugin.tx_rkwgeolocation._CSS_DEFAULT_STYLE (
+	textarea.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	input.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	.tx-rkw-geolocation table {
+		border-collapse:separate;
+		border-spacing:10px;
+	}
+
+	.tx-rkw-geolocation table th {
+		font-weight:bold;
+	}
+
+	.tx-rkw-geolocation table td {
+		vertical-align:top;
+	}
+
+	.typo3-messages .message-error {
+		color:red;
+	}
+
+	.typo3-messages .message-ok {
+		color:green;
+	}
+
+)
