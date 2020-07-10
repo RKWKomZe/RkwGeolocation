@@ -283,7 +283,16 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
 
             // get data from Google
             $cxContext = stream_context_create($aContext);
-            $responseJson = file_get_contents($completeUrl, false, $cxContext);
+            if (ini_get('allow_url_fopen')) {
+                $responseJson = file_get_contents($completeUrl, false, $cxContext);
+            } else {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  // Disable SSL verification
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_URL,$completeUrl);
+                $responseJson=curl_exec($ch);
+                curl_close($ch);
+            }
             $response = json_decode($responseJson, true);
 
             // if response is "OK", than set retrieved data
