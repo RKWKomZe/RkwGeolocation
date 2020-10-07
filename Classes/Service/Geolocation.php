@@ -378,7 +378,7 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
         //  see https://tighten.co/blog/a-mysql-distance-function-you-should-know-about
         switch ($database) {
                 default:
-                    $query->statement('
+                    return $query->statement('
                         SELECT *,
                         (
                             SELECT ST_Distance_Sphere(
