@@ -61,28 +61,28 @@ class MapsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
             <script>
              var txRkwGeolocationGoogleMaps = {
 
-                // Google map object
+                /* Google map object */
                 map : null,
 
-                // Google Geo-Coder
+                /* Google Geo-Coder */
                 geoCoder : null,
 
-                //======================================================
-                // Initialize and display a google map
+                /* ====================================================== */
+                /* Initialize and display a google map */
                 init : function ()
                 {
 
-                    // Create a Google coordinate object for where to center the map
+                    /* Create a Google coordinate object for where to center the map */
                     var latlngDC = new google.maps.LatLng(' . floatval($latitude) . ', ' . floatval($longitude) . ');
 
-                    // Map options for how to display the Google map
-                    // Coordinates of Washington, DC (area centroid)
+                    /* Map options for how to display the Google map */
+                    /* Coordinates of Washington, DC (area centroid) */
                     var mapOptions = { zoom: ' . intval($zoom) . ', center: latlngDC  };
 
-                    // Show the Google map in the div with the attribute id map-canvas.
+                    /* Show the Google map in the div with the attribute id map-canvas. */
                     this.map = new google.maps.Map(document.getElementById(\'tx-rkwgeolocation-map-canvas\'), mapOptions);
 
-                    // Check address?
+                    /* Check address? */
                     if (true == ' . (!empty($address) ? 'true' : 'false') . ') {
 
                         this.geoCoder = new google.maps.Geocoder();
@@ -100,17 +100,17 @@ class MapsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
                     }
 
                     if (false == ' . ($noMarker ? 'true' : 'false') . ') {
-                        // Place a standard Google Marker at the same location as the map center (Washington, DC)
-                        // When you hover over the marker, it will display the title
+                        /* Place a standard Google Marker at the same location as the map center (Washington, DC) */
+                        /* When you hover over the marker, it will display the title */
                         var marker = new google.maps.Marker( {
                             position: latlngDC,
                             map: this.map
                         });
                     }
                 }
-            }
+            };
 
-            // Call the method init() to display the google map when the web page is displayed ( load event )
+            /* Call the method init() to display the google map when the web page is displayed ( load event ) */
             google.maps.event.addDomListener( window, \'load\', txRkwGeolocationGoogleMaps.init );
 
             </script>
