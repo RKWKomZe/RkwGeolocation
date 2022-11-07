@@ -44,8 +44,8 @@ class MapsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
     public function initializeArguments()
     {
         parent::initializeArguments();
-        $this->registerArgument('longitude', 'float', 'The longitude-value.', true, 8.5709247);
-        $this->registerArgument('latitude', 'float', 'The latitude-value.', true, 50.1307615);
+        $this->registerArgument('longitude', 'float', 'The longitude-value.', false, 8.5709247);
+        $this->registerArgument('latitude', 'float', 'The latitude-value.', false, 50.1307615);
         $this->registerArgument('address', 'string', 'The address.', false, '');
         $this->registerArgument('zoom', 'int', 'The zoom-factor.', false, 12);
         $this->registerArgument('noMarker', 'bool', 'Do not display a marker on the map.', false, false);
