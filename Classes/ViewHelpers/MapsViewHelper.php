@@ -23,7 +23,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwGeolocation
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -56,8 +56,8 @@ class MapsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
 
 
     /**
-     * return TRUE, if the given fieldName is NOT in given mandatoryFields (string-list from TypoScript)
-     * TRUE if optional
+     * return true, if the given fieldName is NOT in given mandatoryFields (string-list from TypoScript)
+     * true if optional
      *
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
