@@ -2,7 +2,7 @@
 
 namespace RKW\RkwGeolocation\Service;
 
-use RKW\RkwBasics\Utility\GeneralUtility as Common;
+use Madj2k\CoreExtended\Utility\GeneralUtility as Common;
 use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
@@ -388,8 +388,8 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
                         ) AS distance
                         FROM ' . $table . '
                         WHERE ' . $table . '.longitude > 0 AND ' . $table . '.latitude > 0 ' .
-                        \RKW\RkwBasics\Helper\QueryTypo3::getWhereClauseForEnableFields($table) .
-                        \RKW\RkwBasics\Helper\QueryTypo3::getWhereClauseForVersioning($table) .
+                        \Madj2k\CoreExtended\Utility\QueryUtility::getWhereClauseEnabled($table) .
+                        \Madj2k\CoreExtended\Utility\QueryUtility::getWhereClauseVersioning($table) .
                         ' ' . $where .
                         '
                         HAVING distance <= ' . intval($maxDistance) . '
@@ -409,7 +409,7 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
     {
-        return Common::getTyposcriptConfiguration('RkwGeolocation', $which);
+        return Common::getTypoScriptConfiguration('RkwGeolocation', $which);
         //===
     }
 

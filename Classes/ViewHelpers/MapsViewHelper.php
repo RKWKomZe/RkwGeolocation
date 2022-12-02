@@ -1,7 +1,7 @@
 <?php
 namespace RKW\RkwGeolocation\ViewHelpers;
 
-use RKW\RkwBasics\Utility\GeneralUtility;
+use Madj2k\CoreExtended\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
@@ -71,7 +71,7 @@ class MapsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
         RenderingContextInterface $renderingContext
     ): string {
 
-        $settings = GeneralUtility::getTyposcriptConfiguration('RkwGeolocation');
+        $settings = GeneralUtility::getTypoScriptConfiguration('RkwGeolocation');
         $longitude =  $arguments['longitude'];
         $latitude =  $arguments['latitude'];
         $address =  $arguments['address'];
