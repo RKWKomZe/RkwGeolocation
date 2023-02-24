@@ -15,16 +15,17 @@ $EM_CONF[$_EXTKEY] = [
 	'description' => 'Locates addresses and / or zip codes',
 	'category' => 'plugin',
     'author' => 'Maximilian Fäßler, Steffen Kroggel, Christian Dilger',
-    'author_email' => 'faesslerweb@web.de, developer@steffenkroggel.de, c.dilger@addorange.de',
+    'author_email' => 'maximilian@faesslerweb.de, developer@steffenkroggel.de, c.dilger@addorange.de',
 	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => '0',
 	'createDirs' => '',
 	'clearCacheOnLoad' => 0,
-	'version' => '8.7.6',
+	'version' => '9.5.0',
 	'constraints' => [
 		'depends' => [
-			'typo3' => '7.6.0-8.7.99',
+			'typo3' => '9.5.0-9.5.99',
+            'core_extended' => '9.5.4-9.5.99'
 		],
 		'conflicts' => [
 		],

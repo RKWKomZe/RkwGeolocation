@@ -38,6 +38,7 @@ class MapsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelpe
      */
     protected $escapeOutput = false;
 
+
     /**
      * Initialize arguments
      */
