@@ -1,9 +1,9 @@
 <?php
-
 namespace RKW\RkwGeolocation\ViewHelpers;
 
-use \RKW\RkwBasics\Helper\Common;
-use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use Madj2k\CoreExtended\Utility\GeneralUtility;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -23,12 +23,13 @@ use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwGeolocation
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class MapsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class MapsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+    use CompileWithRenderStatic;
 
     /**
      * As this ViewHelper renders HTML, the output must not be escaped.
@@ -37,22 +38,49 @@ class MapsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
      */
     protected $escapeOutput = false;
 
+
     /**
-     * maps
-     *
-     * @param float $longitude
-     * @param float $latitude
-     * @param string $address
-     * @param int $zoom
-     * @param bool $noMarker
-     * @param string $language
-     * @param string $width
-     * @param string $height
-     * @return string $string
+     * Initialize arguments
      */
-    public function render($longitude = 8.5709247, $latitude = 50.1307615, $address = '', $zoom = 12, $noMarker = false, $language = "de", $width = '100%', $height = '300px')
+    public function initializeArguments()
     {
-        $settings = $this->getSettings();
+        parent::initializeArguments();
+        $this->registerArgument('longitude', 'float', 'The longitude-value.', false, 8.5709247);
+        $this->registerArgument('latitude', 'float', 'The latitude-value.', false, 50.1307615);
+        $this->registerArgument('address', 'string', 'The address.', false, '');
+        $this->registerArgument('zoom', 'int', 'The zoom-factor.', false, 12);
+        $this->registerArgument('noMarker', 'bool', 'Do not display a marker on the map.', false, false);
+        $this->registerArgument('language', 'string', 'The language for the map.', false, 'de');
+        $this->registerArgument('width', 'string', 'The width (CSS-Syntax).', false, '100%');
+        $this->registerArgument('height', 'string', 'The height (CSS-Syntax).', false, '300px');
+    }
+
+
+    /**
+     * return true, if the given fieldName is NOT in given mandatoryFields (string-list from TypoScript)
+     * true if optional
+     *
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return string
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     */
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ): string {
+
+        $settings = GeneralUtility::getTypoScriptConfiguration('RkwGeolocation');
+        $longitude =  $arguments['longitude'];
+        $latitude =  $arguments['latitude'];
+        $address =  $arguments['address'];
+        $zoom =  $arguments['zoom'];
+        $noMarker =  $arguments['noMarker'];
+        $language =  $arguments['language'];
+        $width =  $arguments['width'];
+        $height =  $arguments['height'];
 
         return '
             <!-- Google Maps API -->
@@ -125,18 +153,4 @@ class MapsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
             <div id="tx-rkwgeolocation-map-canvas"></div>
         ';
     }
-
-
-    /**
-     * Returns TYPO3 settings
-     *
-     * @param string $which Which type of settings will be loaded
-     * @return array
-     */
-    protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
-    {
-        return Common::getTyposcriptConfiguration('RkwGeolocation', $which);
-        //===
-    }
-
 }

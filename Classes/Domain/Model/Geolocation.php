@@ -6,7 +6,7 @@ namespace RKW\RkwGeolocation\Domain\Model;
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwGeolocation
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -14,43 +14,47 @@ class Geolocation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
 
     /**
-     * @var integer
+     * @var float
      */
-    protected $longitude = 0;
+    protected float $longitude = 0.0;
+
 
     /**
-     * @var integer
+     * @var float
      */
-    protected $latitude = 0;
+    protected float $latitude = 0.0;
 
-    /**
-     * @var integer
-     */
-    protected $postalCode = '';
 
     /**
      * @var string
      */
-    protected $formattedAddress = '';
+    protected string $postalCode = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $formattedAddress = '';
 
 
     /**
      * Returns the longitude
      *
-     * @return integer $longitude
+     * @return float $longitude
      */
-    public function getLongitude()
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
 
+
     /**
      * Sets the longitude
      *
-     * @param integer $longitude
+     * @param float $longitude
      * @return void
      */
-    public function setLongitude($longitude)
+    public function setLongitude(float $longitude): void
     {
         $this->longitude = $longitude;
     }
@@ -59,20 +63,21 @@ class Geolocation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the latitude
      *
-     * @return integer $latitude
+     * @return float $latitude
      */
-    public function getLatitude()
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
 
+
     /**
      * Sets the latitude
      *
-     * @param integer $latitude
+     * @param float $latitude
      * @return void
      */
-    public function setLatitude($latitude)
+    public function setLatitude(float $latitude): void
     {
         $this->latitude = $latitude;
     }
@@ -81,20 +86,21 @@ class Geolocation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the postalCode
      *
-     * @return integer $postalCode
+     * @return string $postalCode
      */
-    public function getPostalCode()
+    public function getPostalCode(): string
     {
         return $this->postalCode;
     }
 
+
     /**
      * Sets the postalCode
      *
-     * @param integer $postalCode
+     * @param string $postalCode
      * @return void
      */
-    public function setPostalCode($postalCode)
+    public function setPostalCode(string $postalCode): void
     {
         $this->postalCode = $postalCode;
     }
@@ -105,10 +111,11 @@ class Geolocation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      *
      * @return string $formattedAddress
      */
-    public function getFormattedAddress()
+    public function getFormattedAddress(): string
     {
         return $this->formattedAddress;
     }
+
 
     /**
      * Sets the formattedAddress
@@ -116,7 +123,7 @@ class Geolocation extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @param string $formattedAddress
      * @return void
      */
-    public function setFormattedAddress($formattedAddress)
+    public function setFormattedAddress(string $formattedAddress): void
     {
         $this->formattedAddress = $formattedAddress;
     }
