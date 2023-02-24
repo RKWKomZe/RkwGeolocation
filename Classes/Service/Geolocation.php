@@ -2,15 +2,19 @@
 
 namespace RKW\RkwGeolocation\Service;
 
-use \RKW\RkwBasics\Helper\Common;
+use Madj2k\CoreExtended\Utility\GeneralUtility;
+use Madj2k\CoreExtended\Utility\GeneralUtility as Common;
+use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Geolocation
  *
  * @author Maximilian Fäßler <maximilian@faesslerweb.de>
  * @author Steffen Kroggel <developer@steffenkroggel.de>
- * @copyright Rkw Kompetenzzentrum
+ * @copyright RKW Kompetenzzentrum
  * @package RKW_RkwGeolocation
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
@@ -18,70 +22,73 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
 {
 
     /**
-     * Constants for permissions of FE-User Admins
-     *
-     * @const integer
+     * @const string
      */
     const GOOGLE_API_URL = 'https://maps.google.com/maps/api/geocode/json';
 
+
     /**
-     * Constants for permissions of FE-User Authors
-     *
-     * @const integer
+     * @const string
      */
     const GOOGLE_API_KEY = '';
 
-    /**
-     * @var integer
-     */
-    protected $longitude = 0;
 
     /**
-     * @var integer
+     * @var float
      */
-    protected $latitude = 0;
+    protected float $longitude = 0.0;
+
 
     /**
-     * @var string
+     * @var float
      */
-    protected $address;
+    protected float $latitude = 0.0;
 
 
     /**
      * @var string
      */
-    protected $zip;
+    protected string $address = '';
 
 
     /**
      * @var string
      */
-    protected $country = 'Germany';
+    protected string $postalCode = '';
+
+
+    /**
+     * @var string
+     */
+    protected string $country = 'Germany';
+
 
     /**
      * Logger
      *
-     * @var \TYPO3\CMS\Core\Log\Logger
+     * @var \TYPO3\CMS\Core\Log\Logger|null
      */
-    protected $logger;
+    protected ?Logger $logger = null;
+
 
     /**
      * Returns the longitude
      *
-     * @return integer $longitude
+     * @return float $longitude
      */
-    public function getLongitude()
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
 
+
     /**
      * Sets the longitude
      *
-     * @param integer $longitude
+     * @param float $longitude
      * @return void
      */
-    public function setLongitude($longitude)
+    public function setLongitude(float $longitude)
     {
         $this->longitude = $longitude;
     }
@@ -90,9 +97,9 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Returns the latitude
      *
-     * @return integer $latitude
+     * @return float $latitude
      */
-    public function getLatitude()
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
@@ -100,10 +107,10 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Sets the latitude
      *
-     * @param integer $latitude
+     * @param float $latitude
      * @return void
      */
-    public function setLatitude($latitude)
+    public function setLatitude(float $latitude)
     {
         $this->latitude = $latitude;
     }
@@ -112,24 +119,23 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Returns the postalCode
      *
-     * @return integer $postalCode
-     * @deprecated Use getZip() instead
+     * @return string $postalCode
      */
-    public function getPostalCode()
+    public function getPostalCode(): string
     {
-        return $this->zip;
+        return $this->postalCode;
     }
+
 
     /**
      * Sets the postalCode
      *
-     * @param integer $zip
+     * @param string $postalCode
      * @return void
-     * @deprecated Use setZip($zip) instead
      */
-    public function setPostalCode($zip)
+    public function setPostalCode(string $postalCode)
     {
-        $this->zip = $zip;
+        $this->postalCode = $postalCode;
     }
 
 
@@ -138,10 +144,11 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
      *
      * @return string
      */
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->address;
     }
+
 
     /**
      * Sets the address
@@ -149,42 +156,22 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
      * @param string $address
      * @return void
      */
-    public function setAddress($address)
+    public function setAddress(string $address)
     {
         $this->address = $address;
     }
 
 
     /**
-     * Returns the zip
-     *
-     * @return integer $postalCode
-     */
-    public function getZip()
-    {
-        return $this->zip;
-    }
-
-    /**
-     * Sets the zip
-     *
-     * @param integer $zip
-     * @return void
-     */
-    public function setZip($zip)
-    {
-        $this->zip = $zip;
-    }
-
-    /**
      * Returns the country
      *
      * @return string
      */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->country;
     }
+
 
     /**
      * Sets the country
@@ -192,7 +179,7 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
      * @param string $country
      * @return void
      */
-    public function setCountry($country)
+    public function setCountry(string $country)
     {
         $this->country = $country;
     }
@@ -212,7 +199,6 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
     {
 
         $destinationArray = array();
-        $destination = null;
 
         // if an address is given
         if ($this->getAddress()) {
@@ -220,8 +206,8 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
             $destinationArray[] = $this->getCountry();
 
             // if only a postal code is given
-        } elseif ($this->getZip()) {
-            $destinationArray[] = $this->getZip();
+        } elseif ($this->getPostalCode()) {
+            $destinationArray[] = $this->getPostalCode();
             $destinationArray[] = $this->getCountry();
 
             // else long AND lat is given (only one of these doesn't work)
@@ -229,16 +215,14 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
             $destinationArray[] = $this->getLongitude();
             $destinationArray[] = $this->getLatitude();
 
-
         } else {
 
             $this->getLogger()->log(
                 \TYPO3\CMS\Core\Log\LogLevel::ERROR,
-                sprintf('No valid location given. You must specify an address or a zip-code or longitude and latitude.')
+                'No valid location given. You must specify an address or a zip-code or longitude and latitude.'
             );
 
             return false;
-            //===
         }
 
 
@@ -253,14 +237,12 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
             $apiKey = self::GOOGLE_API_KEY;
         }
 
-        $completeUrlSave = $completeUrl = $apiUrl . '?sensor=false&address={' . urlencode(implode(',
-		', $destinationArray)) . '}';
+        $completeUrlSave = $completeUrl = $apiUrl . '?sensor=false&address={' . urlencode(implode(', ', $destinationArray)) . '}';
 
         // check for additional api key (not mandatory)
         if ($apiKey) {
             $completeUrl .= "&key=" . $apiKey;
         }
-
 
         try {
 
@@ -298,107 +280,131 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
             // if response is "OK", than set retrieved data
             if ($response['status'] == 'OK') {
 
-                $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+                /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
+                $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class);
 
                 /** @var \RKW\RkwGeolocation\Domain\Model\Geolocation $geoLocation */
-                $geoLocation = $objectManager->get('RKW\\RkwGeolocation\\Domain\\Model\\Geolocation');
+                $geoLocation = $objectManager->get(\RKW\RkwGeolocation\Domain\Model\Geolocation::class);
 
-                $geoLocation->setLatitude(filter_var($response['results'][0]['geometry']['location']['lat'], FILTER_VALIDATE_FLOAT));
-                $geoLocation->setLongitude(filter_var($response['results'][0]['geometry']['location']['lng'], FILTER_VALIDATE_FLOAT));
-                $geoLocation->setFormattedAddress(filter_var($response['results'][0]['formatted_address'], FILTER_SANITIZE_STRING));
+                $geoLocation->setLatitude(
+                    filter_var(
+                        $response['results'][0]['geometry']['location']['lat'],
+                        FILTER_VALIDATE_FLOAT
+                    )
+                );
+                $geoLocation->setLongitude(
+                    filter_var(
+                        $response['results'][0]['geometry']['location']['lng'],
+                        FILTER_VALIDATE_FLOAT
+                    )
+                );
+                $geoLocation->setFormattedAddress(
+                    filter_var(
+                        $response['results'][0]['formatted_address'],
+                        FILTER_SANITIZE_STRING
+                    )
+                );
 
                 $addressComponents = $response['results'][0]['address_components'];
 
-                // additional get zip
+                // additional get postalCode
                 if (is_array($addressComponents)) {
                     foreach ($addressComponents as $component) {
 
                         if ($component['types'][0] == 'postal_code') {
                             $geoLocation->setPostalCode($component['long_name']);
                             break;
-                            //===
                         }
                     }
                 }
 
-                $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::INFO, sprintf('Successfully received data from Google API for location "%s"', implode(',', $destinationArray)));
+                $this->getLogger()->log(
+                    \TYPO3\CMS\Core\Log\LogLevel::INFO,
+                    sprintf(
+                        'Successfully received data from Google API for location "%s"',
+                        implode(',', $destinationArray)
+                    )
+                );
 
                 return $geoLocation;
-                //===
 
             }
 
-            $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::WARNING, sprintf('Google API call for location "%s" failed (%s). Reason: %s. %s', implode(',', $destinationArray), $completeUrlSave, $response['status'], $response['error_message']));
+            $this->getLogger()->log(
+                \TYPO3\CMS\Core\Log\LogLevel::WARNING,
+                sprintf(
+                    'Google API call for location "%s" failed (%s). Reason: %s. %s',
+                    implode(',', $destinationArray),
+                    $completeUrlSave,
+                    $response['status'],
+                    $response['error_message'])
+            );
 
         } catch (\Exception $e) {
-            $this->getLogger()->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, sprintf('Google API for location "%s" call failed (%s). Reason: %s.', implode(',', $destinationArray), $completeUrlSave, $e->getMessage()));
+            $this->getLogger()->log(
+                \TYPO3\CMS\Core\Log\LogLevel::ERROR,
+                sprintf('Google API for location "%s" call failed (%s). Reason: %s.',
+                    implode(',', $destinationArray),
+                    $completeUrlSave,
+                    $e->getMessage()
+                )
+            );
         }
 
         return false;
-        //===
-    }
-
-
-    /**
-     * function determineGeoData
-     *
-     * @deprecated since 2017-02-23, Alias of fetchGeoData, use fetchGeoData instead
-     * @return void
-     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
-     */
-    public function determineGeoData()
-    {
-        $this->fetchGeoData();
     }
 
 
     /**
      * Prepares a MySql-Select for distance search
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
-     * @param  string $table Table for select
-     * @param  int $limit Max items to select
-     * @param  int $offset Items to skip
-     * @param  string $where Additional where-string
-     * @param  string $orderBy Order-Clause
-     * @param  int $maxDistance Maximum distance to include
-     * @param  string $database Type of database used
+     * @param string $table Table for select
+     * @param int $limit Max items to select
+     * @param int $offset Items to skip
+     * @param string $where Additional where-string
+     * @param string $orderBy Order-Clause
+     * @param int $maxDistance Maximum distance to include
      * @return string
-     * @throws \TYPO3\CMS\Core\Type\Exception\InvalidEnumerationValueException
+     * @throws \TYPO3\CMS\Core\Context\Exception\AspectNotFoundException
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     * @see https://tighten.co/blog/a-mysql-distance-function-you-should-know-about
      */
-    public function getQueryStatementDistanceSearch($query, $table, $limit, $offset, $where, $orderBy = 'distance', $maxDistance = 5, $database = 'mysql')
+    public function getQueryStatementDistanceSearch(
+        string $table,
+        int $limit,
+        int $offset,
+        string $where,
+        string $orderBy = 'distance',
+        int $maxDistance = 5
+    ): string
     {
 
         if (
             ($geoLocation = $this->fetchGeoData())
             && ($geoLocation instanceof \RKW\RkwGeolocation\Domain\Model\Geolocation)
         ) {
-
-        //  see https://tighten.co/blog/a-mysql-distance-function-you-should-know-about
-        switch ($database) {
-                default:
-                    return $query->statement('
-                        SELECT *,
-                        (
-                            SELECT ST_Distance_Sphere(
-                                point(' . $geoLocation->getLongitude() . ', ' . $geoLocation->getLatitude() . '),
-                                point(' . $table . '.longitude, ' . $table . '.latitude)
-                            ) * 0.001
-                        ) AS distance
-                        FROM ' . $table . '
-                        WHERE ' . $table . '.longitude > 0 AND ' . $table . '.latitude > 0 ' .
-                        \RKW\RkwBasics\Helper\QueryTypo3::getWhereClauseForEnableFields($table) .
-                        \RKW\RkwBasics\Helper\QueryTypo3::getWhereClauseForVersioning($table) .
-                        ' ' . $where .
-                        '
-                        HAVING distance <= ' . intval($maxDistance) . '
-                        ORDER BY ' . addslashes($orderBy) . '
-                        LIMIT ' . intval($offset) . ',' . intval($limit) . ';
-                    ');
-            }
+            return '
+                SELECT *,
+                (
+                    SELECT ST_Distance_Sphere(
+                        point(' . $geoLocation->getLongitude() . ', ' . $geoLocation->getLatitude() . '),
+                        point(' . $table . '.longitude, ' . $table . '.latitude)
+                    ) * 0.001
+                ) AS distance
+                FROM ' . $table . '
+                WHERE ' . $table . '.longitude > 0 AND ' . $table . '.latitude > 0 ' .
+                \Madj2k\CoreExtended\Utility\QueryUtility::getWhereClauseEnabled($table) .
+                \Madj2k\CoreExtended\Utility\QueryUtility::getWhereClauseVersioning($table) .
+                ' ' . $where .
+                ' HAVING distance <= ' . $maxDistance . '
+                ORDER BY ' . addslashes($orderBy) . '
+                LIMIT ' . $offset . ',' . $limit . ';
+            ';
         }
+
+        return '';
     }
+
 
     /**
      * Returns TYPO3 settings
@@ -407,25 +413,25 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
      * @return array
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      */
-    protected function getSettings($which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS)
+    protected function getSettings(string $which = ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS): array
     {
-        return Common::getTyposcriptConfiguration('RkwGeolocation', $which);
-        //===
+        return Common::getTypoScriptConfiguration('RkwGeolocation', $which);
     }
+
 
     /**
      * Returns logger instance
      *
      * @return \TYPO3\CMS\Core\Log\Logger
      */
-    protected function getLogger()
+    protected function getLogger(): Logger
     {
 
         if (!$this->logger instanceof \TYPO3\CMS\Core\Log\Logger) {
-            $this->logger = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
+            $this->logger = GeneralUtility::makeInstance(LogManager::class)
+                ->getLogger(__CLASS__);
         }
 
         return $this->logger;
-        //===
     }
 }

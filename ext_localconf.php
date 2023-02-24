@@ -7,23 +7,6 @@ call_user_func(
     {
 
         //=================================================================
-        // Configure Plugin
-        //=================================================================
-        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-            'RKW.' . $extKey,
-            'Geolocation',
-            array(
-                'Geolocation' => 'test, ',
-
-            ),
-            // non-cacheable actions
-            array(
-                'Geolocation' => '',
-
-            )
-        );
-
-        //=================================================================
         // Configure Logger
         //=================================================================
         $GLOBALS['TYPO3_CONF_VARS']['LOG']['RKW']['RkwGeolocation']['writerConfiguration'] = array(
