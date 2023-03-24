@@ -1,10 +1,6 @@
 <?php
 namespace RKW\RkwGeolocation\ViewHelpers;
 
-use Madj2k\CoreExtended\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
-
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -18,6 +14,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Madj2k\CoreExtended\Utility\GeneralUtility;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+
 /**
  * Class MapsViewHelper
  *
@@ -29,7 +29,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class MapsViewHelper extends \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper
 {
+
     use CompileWithRenderStatic;
+
 
     /**
      * As this ViewHelper renders HTML, the output must not be escaped.

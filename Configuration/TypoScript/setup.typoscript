@@ -1,9 +1,18 @@
-
 plugin.tx_rkwgeolocation {
 	view {
-		templateRootPath = {$plugin.tx_rkwgeolocation.view.templateRootPath}
-		partialRootPath = {$plugin.tx_rkwgeolocation.view.partialRootPath}
-		layoutRootPath = {$plugin.tx_rkwgeolocation.view.layoutRootPath}
+        layoutRootPaths {
+            0 = EXT:rkw_geolocation/Resources/Private/Layouts/
+            1 = {$plugin.tx_rkwgeolocation.view.layoutRootPath}
+        }
+        templateRootPaths {
+            0 = EXT:rkw_geolocation/Resources/Private/Templates/
+            1 = {$plugin.tx_rkwgeolocation.view.templateRootPath}
+        }
+        partialRootPaths {
+            0 = EXT:rkw_geolocation/Resources/Private/Partials/
+            1 = {$plugin.tx_rkwgeolocation.view.partialRootPath}
+            2 = {$plugin.tx_coreextended.view.partialRootPath}
+        }
 	}
 	persistence {
 		storagePid = {$plugin.tx_rkwgeolocation.persistence.storagePid}
