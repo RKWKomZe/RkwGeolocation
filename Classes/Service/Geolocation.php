@@ -387,8 +387,7 @@ class Geolocation implements \TYPO3\CMS\Core\SingletonInterface
         string $where,
         string $orderBy = 'distance',
         int $maxDistance = 5
-    ): string
-    {
+    ): string {
 
         if (
             ($geoLocation = $this->fetchGeoData())
