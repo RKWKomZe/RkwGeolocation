@@ -20,12 +20,6 @@
             "email": "maximilian@faesslerweb.de",
             "homepage": "https://www.faesslerweb.de",
             "role": "Developer"
-        },
-        {
-            "name": "Christian Dilger",
-            "email": "c.dilger@addorange.de",
-            "homepage": "http://addorange.de",
-            "role": "Developer"
         }
     ],
     "require": {

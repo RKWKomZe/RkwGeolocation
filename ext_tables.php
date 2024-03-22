@@ -7,5 +7,5 @@ call_user_func(
 
 
     },
-    $_EXTKEY
+    'rkw_geolocation'
 );
